@@ -16,24 +16,26 @@
 # Выведите одно число — минимальное расстояние, которое придётся преодолеть по пути из точки A в точку B,
 # если не нарушать правил дорожного движения. Ваш ответ будет принят, если его абсолютная или относительная погрешность не превосходит 10-6.
 
+# import math
+#
+# ax, ay, bx, by = map(int, input().split())
+# r = (ax ** 2 + ay ** 2) ** 0.5
+# alpha = abs(math.atan2((ax * by - ay * bx), (ax * bx + ay * by)))
+# gip_2 = (bx ** 2 + by ** 2)
+# ans1 = alpha * r  + abs(gip_2 ** 0.5 - r)
+# ans2 = r + gip_2 ** 0.5
+# print(min(ans1, ans2))
+
 import math
 
-def TestCase():
-    x_a, y_a, x_b, y_b = map(int, input().split())
-    r1 = math.sqrt(x_a * x_a + y_a * y_a)
-    r2 = math.sqrt(x_b * x_b + y_b * y_b)
-    if r1 > r2:
-        r1, r2 = r2, r1
-        x_a, x_b = x_b, x_a
-        y_a, y_b = y_b, y_a
-    new_x = x_b * r1 / r2
-    new_y = y_b * r1 / r2
-    angle = abs(math.atan2(x_a * new_y - y_a * new_x, x_a * new_x + y_a * new_y))
-    print(min(r1 + r2, angle * r1 + math.sqrt((new_x - x_b) * (new_x - x_b) + (new_y - y_b) * (new_y - y_b))))
+x1, y1, x2, y2 = map(int, input().split())
+r1 = (x1 ** 2 + y1 ** 2) ** 0.5
+r2 = (x2 ** 2 + y2 ** 2) ** 0.5
+alpha = abs(math.atan2(x1 * y2 - y1 * x2, x1 * x2 + y1 * y2))
+ans1 = alpha * r1 + abs(r2 - r1)
+ans2 = r1 + r2
+print(min(ans1, ans2))
 
-t = 1
-while t > 0:
-    TestCase()
-    t -= 1
+
 
 
