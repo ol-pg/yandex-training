@@ -13,23 +13,33 @@
 # Формат вывода
 # Выведите единственное целое число  — минимальное количество секунд, которое необходимо, чтобы все сотрудники оказались на парковке.
 
-import math
-
-k = int(input())
-n = int(input())
-employees = [int(input()) for _ in range(n)]
-
-total_time = 0
-for i in range(n-1, -1, -1):
-    trips = math.ceil(employees[i] / k)
-    total_time += trips * 2 * (i+1)
-    if trips > 1:
-        total_time += 2 * (i+1)
-    employees[i] -= trips * k
-    if i > 0:
-        employees[i-1] += employees[i]
-
-print(total_time)
+from typing import List
 
 
+def alg(k: int, a: List[int]) -> int:
+    total_time = 0
+    people_remainder = 0
+    up_floor = 0
+    for i in range(len(a) - 1, -1, -1):
+        floor = i + 1
+        if people_remainder == 0:
+            up_floor = floor
+        people_remainder += a[i]
+        if people_remainder >= k:
+            total_time += up_floor * 2
+            people_remainder -= k
+            up_floor = floor
+        if people_remainder >= k:
+            trips = people_remainder // k
+            total_time += floor * 2 * trips
+            people_remainder %= k
+    if people_remainder != 0:
+        total_time += up_floor * 2
+    return total_time
 
+
+if __name__ == '__main__':
+    k = int(input().strip())
+    n = int(input().strip())
+    a = [int(input().strip()) for _ in range(n)]
+    print(alg(k, a))

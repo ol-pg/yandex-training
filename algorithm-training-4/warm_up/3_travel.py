@@ -16,25 +16,33 @@
 # Выведите одно число — минимальное расстояние, которое придётся преодолеть по пути из точки A в точку B,
 # если не нарушать правил дорожного движения. Ваш ответ будет принят, если его абсолютная или относительная погрешность не превосходит 10-6.
 
-# import math
-#
-# ax, ay, bx, by = map(int, input().split())
-# r = (ax ** 2 + ay ** 2) ** 0.5
-# alpha = abs(math.atan2((ax * by - ay * bx), (ax * bx + ay * by)))
-# gip_2 = (bx ** 2 + by ** 2)
-# ans1 = alpha * r  + abs(gip_2 ** 0.5 - r)
-# ans2 = r + gip_2 ** 0.5
-# print(min(ans1, ans2))
-
 import math
 
-x1, y1, x2, y2 = map(int, input().split())
-r1 = (x1 ** 2 + y1 ** 2) ** 0.5
-r2 = (x2 ** 2 + y2 ** 2) ** 0.5
-alpha = abs(math.atan2(x1 * y2 - y1 * x2, x1 * x2 + y1 * y2))
-ans1 = alpha * r1 + abs(r2 - r1)
-ans2 = r1 + r2
-print(min(ans1, ans2))
+def alg(xA, yA, xB, yB):
+    if xA == xB and yA == yB:
+        track = 0
+    elif (xA == 0 and yA == 0) or (xB == 0 and yB == 0):
+        track = math.sqrt(xA * xA + yA * yA + xB * xB + yB * yB)
+    else:
+        rA = math.sqrt(xA * xA + yA * yA)
+        rB = math.sqrt(xB * xB + yB * yB)
+        rMin = min(rA, rB)
+        rDelta = max(rA, rB) - rMin
+
+        angleA = math.atan2(yA, xA)
+        angleB = math.atan2(yB, xB)
+        angleDelta = max(angleA, angleB) - min(angleA, angleB)
+        if angleDelta > math.pi:
+            angleDelta = 2 * math.pi - angleDelta
+
+        track = rDelta + min(2, angleDelta) * rMin
+    return "{:.12f}".format(track)
+
+xA, yA, xB, yB = map(int, input().split())
+print(alg(xA, yA, xB, yB))
+
+
+
 
 
 
