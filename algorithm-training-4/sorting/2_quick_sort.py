@@ -3,63 +3,58 @@
 # На каждом шаге выбирайте опорный элемент и выполняйте partition относительно него.
 # Затем рекурсивно запуститесь от двух частей, на которые разбился исходный массив.
 
+import sys
 import random
 
-
-def main():
-    input_file = "input.txt"
-    with open(input_file, "r") as f:
-        n = int(f.readline())
-        if n == 0:
-            print()
-            return
-        nums = list(map(int, f.readline().split()))
-        if not is_sorted(nums):
-            quick_sort(nums, 0, len(nums) - 1)
-    print(nums_to_string(nums))
+sys.setrecursionlimit(9999999)
 
 
-def is_sorted(nums):
-    for i in range(1, len(nums)):
-        if nums[i - 1] > nums[i]:
-            return False
-    return True
+def quick_sort(mass, l=None, r=None):
+    if l >= r:
+        return
+    q = random.randint(l, r)
+    i = l
+    j = r
+    while i < j:
+        while mass[i] < mass[q]:
+            i += 1
+        while j > i and mass[j] > mass[q]:
+            j -= 1
+        if i <= j:
+            mass[i], mass[j] = mass[j], mass[i]
+            i += 1
+            j -= 1
+            quick_sort(mass, l, j)
+            quick_sort(mass, i, r)
 
 
-def save_to_file(nums):
-    with open("output.txt", "w") as f:
-        f.write(nums_to_string(nums))
+def quick_sort_v2(mass, l, r):
+    if l + 1 >= r:
+        return
+    e = l
+    g = l
+    q = mass[random.randint(l, r-1)]
+    for n in range(l, r):
+        if mass[n] > q:
+            continue
+        elif mass[n] == q:
+            mass[g], mass[n] = mass[n], mass[g]
+        else:
+            mass[n], mass[g] = mass[g], mass[n]
+            mass[g], mass[e] = mass[e], mass[g]
 
-
-def quick_sort(nums, left, right):
-    if left < right:
-        p = partition(nums, left, right)
-        quick_sort(nums, left, p)
-        quick_sort(nums, p + 1, right)
-
-
-def partition(nums, left, right):
-    pivot = nums[left + random.randint(0, right - left)]
-    length = right - left
-    equal = left
-    great = left
-    for i in range(left, left + length + 1):
-        temp = nums[i]
-        if nums[i] < pivot:
-            nums[i] = nums[great]
-            nums[great], nums[equal] = nums[equal], nums[great]
-            equal += 1
-            great += 1
-        elif nums[i] == pivot:
-            nums[i] = nums[great]
-            nums[great] = temp
-            great += 1
-    return equal
-
-
-def nums_to_string(nums):
-    return " ".join(str(num) for num in nums)
+            e += 1
+        g += 1
+    quick_sort_v2(mass, l, e)
+    quick_sort_v2(mass, g, r)
 
 
 if __name__ == "__main__":
-    main()
+    with open("input.txt", "r") as f:
+        N = int(f.readline())
+        mass = list(map(int, f.readline().split()))
+    if N > 0:
+        quick_sort_v2(mass, 0, len(mass))
+        print(" ".join(str(x) for x in mass))
+    else:
+        print()
